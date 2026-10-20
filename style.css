@@ -157,6 +157,14 @@ body {
 
 /* ---------------- レイアウト ---------------- */
 
+.page-title {
+  margin: 26px 0 0;
+  font-size: 22px;
+  line-height: 1.45;
+  font-weight: 700;
+  color: var(--c-text);
+}
+
 .layout {
   display: grid;
   grid-template-columns: minmax(360px, 1fr) minmax(0, 1.35fr);

@@ -453,7 +453,7 @@
       render: function (v) {
         var w = !!v.useWareki;
         var a = num(v.amount);
-        var h = '<h1 class="doc-title">借用書</h1>';
+        var h = '<h2 class="doc-title">借用書</h2>';
         h += amountBlock(v);
         h += '<p class="doc-lead">上記金額を、下記の約定により借用いたしました。</p>';
 
@@ -542,7 +542,7 @@
       render: function (v) {
         var w = !!v.useWareki;
         var iv = num(v.itemValue);
-        var h = '<h1 class="doc-title">借用書</h1>';
+        var h = '<h2 class="doc-title">借用書</h2>';
         h += '<p class="doc-subtitle">（物品の借用）</p>';
         h += '<p class="doc-lead">下記の物品を借用いたしました。</p>';
         h += '<p class="doc-ref">記</p>';
@@ -635,7 +635,7 @@
       },
       render: function (v) {
         var w = !!v.useWareki;
-        var h = '<h1 class="doc-title">売買契約書</h1>';
+        var h = '<h2 class="doc-title">売買契約書</h2>';
         h += '<p class="doc-lead">売主　' + val(v.seller_name, '（売主氏名）') +
              '（以下「甲」という。）と、買主　' + val(v.buyer_name, '（買主氏名）') +
              '（以下「乙」という。）とは、次のとおり売買契約（以下「本契約」という。）を締結した。</p>';
@@ -710,7 +710,7 @@
         useWareki: true
       },
       render: function (v) {
-        var h = '<h1 class="doc-title">覚書</h1>';
+        var h = '<h2 class="doc-title">覚書</h2>';
         if (String(v.subject || '').trim()) {
           h += '<p class="doc-subtitle">（' + esc(String(v.subject).trim()) + '）</p>';
         }
@@ -768,7 +768,7 @@
         useWareki: true
       },
       render: function (v) {
-        var h = '<h1 class="doc-title">誓約書</h1>';
+        var h = '<h2 class="doc-title">誓約書</h2>';
         if (String(v.pledgeTo || '').trim()) {
           h += '<p class="doc-ref">' + esc(String(v.pledgeTo).trim()) + '</p>';
         }
