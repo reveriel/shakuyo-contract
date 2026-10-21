@@ -767,6 +767,7 @@ body {
 
   /* 印刷しない要素 */
   .no-print,
+  .page-title,
   .feedback-fab,
   .site-header,
   .form-pane,
