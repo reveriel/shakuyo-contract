@@ -388,7 +388,30 @@ body {
 
 /* ---------------- プレビュー ---------------- */
 
-.preview-pane { display: flex; flex-direction: column; gap: 14px; }
+.preview-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: sticky;
+  top: 88px;
+  align-self: start;
+  max-height: calc(100vh - 104px);
+  overflow-y: auto;
+  padding: 2px 4px 16px;
+  scrollbar-gutter: stable;
+}
+
+/* 紙面・共有ブロックは縮めず、プレビュー枠の中で縦スクロールさせる */
+.preview-pane > * { flex: none; }
+
+@media (max-width: 1080px) {
+  .preview-pane {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    padding: 0;
+  }
+}
 
 .preview-bar {
   display: flex;
@@ -760,6 +783,7 @@ body {
     gap: 0 !important;
     position: static !important;
     overflow: visible !important;
+    max-height: none !important;
     box-shadow: none !important;
     border: 0 !important;
     background: transparent !important;
