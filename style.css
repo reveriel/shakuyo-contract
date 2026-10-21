@@ -433,6 +433,55 @@ body {
   overflow: hidden;
 }
 
+/* 書式: 字体（紙面ルートに class を付与。印刷時もそのまま継承される） */
+.paper.font-mincho { font-family: var(--font-doc); }
+/* 既定の紙面は明朝。ゴシックを選んだときだけ sans に切り替える */
+.paper.font-gothic { font-family: var(--font); }
+
+/* 書式: 太字（紙面全体の基準ウェイト。見出し等の個別指定はそのまま活かす） */
+.paper.weight-bold { font-weight: 700; }
+
+/* 書式フィールド（字体・太字）のセグメント */
+.fld .fmt-row { display: flex; flex-wrap: wrap; gap: 7px; }
+
+.fld .fmt-row label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 7px 11px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--c-text);
+  background: var(--c-surface-2);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color .15s, border-color .15s, color .15s;
+}
+
+.fld .fmt-row label:hover { border-color: var(--c-border-strong); }
+
+.fld .fmt-row label:has(input:checked) {
+  color: var(--c-accent);
+  background: var(--c-accent-soft);
+  border-color: var(--c-accent);
+}
+
+.fld .fmt-row input[type="radio"] {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  accent-color: var(--c-accent);
+}
+
+.fmt-help {
+  margin: 10px 0 0;
+  font-size: 11.5px;
+  color: var(--c-text-faint);
+  line-height: 1.5;
+}
+
 /* ---------------- 文書本体 ---------------- */
 
 .doc-title {

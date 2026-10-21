@@ -147,6 +147,27 @@
         <button class="btn btn-ghost btn-sm" id="resetBtn" type="button" data-i18n="btnReset">リセット</button>
       </div>
 
+      <fieldset class="fieldset">
+        <legend data-i18n="legendFormat">書式</legend>
+        <div class="grid">
+          <div class="fld">
+            <label id="fmtFontLabel" data-i18n="lblFont">字体</label>
+            <div class="fmt-row" role="radiogroup" aria-labelledby="fmtFontLabel">
+              <label><input type="radio" name="docFont" value="mincho" checked><span data-i18n="optMincho">明朝体</span></label>
+              <label><input type="radio" name="docFont" value="gothic"><span data-i18n="optGothic">ゴシック体</span></label>
+            </div>
+          </div>
+          <div class="fld">
+            <label id="fmtWeightLabel" data-i18n="lblWeight">太字</label>
+            <div class="fmt-row" role="radiogroup" aria-labelledby="fmtWeightLabel">
+              <label><input type="radio" name="docWeight" value="normal" checked><span data-i18n="optNormal">通常</span></label>
+              <label><input type="radio" name="docWeight" value="bold"><span data-i18n="optBold">太字</span></label>
+            </div>
+          </div>
+        </div>
+        <p class="fmt-help" data-i18n="helpFormat">字体と太字はプレビューと印刷結果に反映されます。既定のままでも従来と同じ見た目です。</p>
+      </fieldset>
+
       <form id="docForm" class="doc-form" autocomplete="off"></form>
 
       <p class="legal-note" id="legalNote">

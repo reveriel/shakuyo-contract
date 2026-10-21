@@ -200,6 +200,16 @@
     lblDocDate:   { zh: '作成日期', ja: '作成日' },
     lblUseWareki: { zh: '日期用年号（令和）表示', ja: '日付を元号（令和）で表記する' },
 
+    legendFormat: { zh: '排版', ja: '書式' },
+    lblFont:      { zh: '字体', ja: '字体' },
+    lblWeight:    { zh: '粗体', ja: '太字' },
+    optMincho:    { zh: '宋体', ja: '明朝体' },
+    optGothic:    { zh: '黑体', ja: 'ゴシック体' },
+    optNormal:    { zh: '常规', ja: '通常' },
+    optBold:      { zh: '加粗', ja: '太字' },
+    helpFormat:   { zh: '字体和粗体会反映到预览与打印结果。保持默认时与以前的外观一致。',
+                    ja: '字体と太字はプレビューと印刷結果に反映されます。既定のままでも従来と同じ見た目です。' },
+
     lblAmount:    { zh: '金额（日元）', ja: '金額（円）' },
     lblPrice:     { zh: '买卖价款（日元）', ja: '売買代金（円）' },
     lblRepayDeadline: { zh: '还款期限', ja: '返済期限' },
@@ -920,7 +930,19 @@
      11. プレビュー描画
      --------------------------------------------------------- */
 
+  function applyFormat() {
+    var paper = $('paper');
+    if (!paper) return;
+    var fontEl = document.querySelector('input[name="docFont"]:checked');
+    var weightEl = document.querySelector('input[name="docWeight"]:checked');
+    var font = fontEl ? fontEl.value : 'mincho';
+    paper.classList.toggle('font-mincho', font !== 'gothic');
+    paper.classList.toggle('font-gothic', font === 'gothic');
+    paper.classList.toggle('weight-bold', !!(weightEl && weightEl.value === 'bold'));
+  }
+
   function syncPreview() {
+    applyFormat();
     var paper = $('paper');
     if (paper) paper.innerHTML = tmpl().render(state);
   }
@@ -1026,6 +1048,12 @@
       state[f.id] = blankValue(f);
     });
     state.useWareki = true;
+    document.querySelectorAll('input[name="docFont"]').forEach(function (r) {
+      r.checked = (r.value === 'mincho');
+    });
+    document.querySelectorAll('input[name="docWeight"]').forEach(function (r) {
+      r.checked = (r.value === 'normal');
+    });
     writeForm();
     updateConditionals();
     syncUI();
@@ -1095,6 +1123,11 @@
 
     buildTabs();
     buildForm();
+
+    document.querySelectorAll('input[name="docFont"], input[name="docWeight"]').forEach(function (r) {
+      r.addEventListener('change', applyFormat);
+    });
+    applyFormat();
 
     var langBtn = $('langBtn');
     if (langBtn) {
