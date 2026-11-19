@@ -1051,10 +1051,48 @@
     el.className = 'rate-hint' + (warn ? ' warn' : (p > 0 ? ' ok' : ''));
   }
 
+
+  /* ---------------------------------------------------------
+     収入印紙の目安（第1号文書：金銭消費貸借契約証書）
+     金額だけで機械的に決まる部分のみ表示する。
+     --------------------------------------------------------- */
+  var STAMP_TIERS = [
+    [10000, 0], [1000000, 200], [2000000, 400], [3000000, 600],
+    [5000000, 1000], [10000000, 2000], [50000000, 4000],
+    [100000000, 10000], [500000000, 20000], [1000000000, 40000]
+  ];
+
+  function stampTaxFor(amount) {
+    if (!amount || amount < 10000) return 0;
+    for (var i = 0; i < STAMP_TIERS.length; i++) {
+      if (amount <= STAMP_TIERS[i][0]) return STAMP_TIERS[i][1];
+    }
+    return 200000; // 10億円超
+  }
+
+  function updateStampNote() {
+    var el = $('stampNote');
+    if (!el) return;
+    var supported = (current === 'loan-money');
+    if (!supported) { el.hidden = true; return; }
+    var amountEl = document.querySelector('[data-key="amount"]');
+    var amount = amountEl ? Number(String(amountEl.value).replace(/[^0-9]/g, '')) : 0;
+    var tax = stampTaxFor(amount);
+    el.hidden = false;
+    if (!amount) {
+      el.textContent = '金額を入力すると、収入印紙の目安を表示します（第1号文書）。';
+    } else if (tax === 0) {
+      el.textContent = 'この金額（1万円未満）の借用書は、印紙税はかかりません。';
+    } else {
+      el.textContent = 'この金額の借用書は第1号文書にあたり、収入印紙 ' + tax.toLocaleString('ja-JP') + ' 円分が必要です（※一般的な目安。詳細は国税庁の案内をご確認ください）。';
+    }
+  }
+
   function syncUI() {
     syncAmountBox();
     syncRateHint();
     syncPreview();
+    updateStampNote();
   }
 
   /* ---------------------------------------------------------
