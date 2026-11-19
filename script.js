@@ -802,6 +802,68 @@
      9. 状態
      --------------------------------------------------------- */
 
+
+  /* ===================================================================
+     前回入力の保存・復元（この端末内のみ / サーバー送信なし）
+     =================================================================== */
+  var PROFILE_KEY = 'shakuyo.profile.v1';
+  var profileStore = (function () {
+    try {
+      var k = '__sk_test__';
+      window.localStorage.setItem(k, '1');
+      window.localStorage.removeItem(k);
+      return window.localStorage;
+    } catch (e) { return null; }
+  })();
+  var profileTimer = null;
+
+  function saveProfileNow() {
+    if (!profileStore) return;
+    var form = $('docForm');
+    if (!form) return;
+    var data = {};
+    form.querySelectorAll('[data-key]').forEach(function (el) {
+      if (el.type === 'date') return;           // 日付は復元しない（古い日付の事故を防ぐ）
+      var k = el.getAttribute('data-key');
+      data[k] = (el.type === 'checkbox') ? !!el.checked : el.value;
+    });
+    try {
+      profileStore.setItem(PROFILE_KEY, JSON.stringify({ v: 1, savedAt: new Date().toISOString(), fields: data }));
+    } catch (e) {}
+  }
+
+  function queueSaveProfile() {
+    if (!profileStore) return;
+    if (profileTimer) clearTimeout(profileTimer);
+    profileTimer = setTimeout(saveProfileNow, 500);
+  }
+
+  function restoreProfile() {
+    if (!profileStore) return false;
+    var raw, parsed;
+    try { raw = profileStore.getItem(PROFILE_KEY); } catch (e) { return false; }
+    if (!raw) return false;
+    try { parsed = JSON.parse(raw); } catch (e) { return false; }
+    if (!parsed || parsed.v !== 1 || !parsed.fields) return false;
+    Object.keys(parsed.fields).forEach(function (k) {
+      if (state[k] === undefined || state[k] === '') state[k] = parsed.fields[k];
+    });
+    return true;
+  }
+
+  function showProfileHint() {
+    var form = $('docForm');
+    if (!form || !form.parentNode) return;
+    var bar = document.createElement('div');
+    bar.className = 'profile-hint no-print';
+    bar.innerHTML = '前回入力した内容を復元しました。<button type="button" class="profile-delete" id="profileDelete">保存データを削除</button>';
+    form.parentNode.insertBefore(bar, form);
+    $('profileDelete').addEventListener('click', function () {
+      try { profileStore.removeItem(PROFILE_KEY); } catch (e) {}
+      if (bar.parentNode) bar.parentNode.removeChild(bar);
+    });
+  }
+
   var state = {};              /* 全フィールドの値（id → 文字列 or boolean） */
   var current = 'loan-money';  /* 現在の書式 */
 
@@ -1121,8 +1183,16 @@
     if (urlEl) urlEl.textContent = SHARE_URL;
     if (state.useWareki === undefined) state.useWareki = true;
 
+    var restoredProfile = restoreProfile();
     buildTabs();
     buildForm();
+    if (restoredProfile) showProfileHint();
+
+    var docFormEl = $('docForm');
+    if (docFormEl) {
+      docFormEl.addEventListener('input', queueSaveProfile);
+      docFormEl.addEventListener('change', queueSaveProfile);
+    }
 
     document.querySelectorAll('input[name="docFont"], input[name="docWeight"]').forEach(function (r) {
       r.addEventListener('change', applyFormat);
